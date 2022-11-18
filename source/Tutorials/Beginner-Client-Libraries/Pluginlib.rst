@@ -189,49 +189,6 @@ A couple things to note:
   * ``description``: A description of the plugin and what it does.
   * ``name``: There used to be a name attribute, but it is no longer required.
 
-2.3 CMake Plugin Declaration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The last step is to export your plugins via ``CMakeLists.txt``. This is a change from ROS 1, where the exporting was done via ``package.xml``. Add the following block to your ``ros2_ws/src/polygon_plugins/CMakeLists.txt`` after the line reading ``find_package(pluginlib REQUIRED)``
-
-.. code-block:: console
-
-    add_library(polygon_plugins src/polygon_plugins.cpp)
-    target_include_directories(polygon_plugins PUBLIC
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<INSTALL_INTERFACE:include>)
-    ament_target_dependencies(
-      polygon_plugins
-      polygon_base
-      pluginlib
-    )
-
-    pluginlib_export_plugin_description_file(polygon_base plugins.xml)
-
-    install(
-      TARGETS polygon_plugins
-      EXPORT export_${PROJECT_NAME}
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib
-      RUNTIME DESTINATION bin
-    )
-
-And before the ``ament_package`` command, add
-
-.. code-block:: console
-
-    ament_export_libraries(
-      polygon_plugins
-    )
-    ament_export_targets(
-      export_${PROJECT_NAME}
-    )
-
-
-The arguments to this CMake command are
-
-1. The package for the base class, i.e. ``polygon_base``
-2. The relative path to the Plugin Declaration xml, i.e. ``plugins.xml``
-
 
 3 Use the Plugins
 ^^^^^^^^^^^^^^^^^
